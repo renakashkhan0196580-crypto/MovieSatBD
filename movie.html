@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieSatBD - Watch</title>
+    <title>MovieSatBD Official - Premium Player</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,18 +13,16 @@
         .header b { font-size: 1rem; color: #eee; }
         .container { max-width: 800px; margin: 0 auto; padding: 15px; }
         
-        /* Player Box with NO TRAILER BANNER support */
+        /* Player Box supports coming soon banner */
         .player { width: 100%; aspect-ratio: 16/9; background: #111; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid #222; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         iframe { width: 100%; height: 100%; border: none; }
         .no-trailer-poster { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; filter: blur(1px); }
-        .no-trailer-tag { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.8); font-size: 0.9rem; font-weight: bold; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px; border: 1px solid #444; }
+        .coming-soon-status-tag { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.8); font-size: 0.9rem; font-weight: bold; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px; border: 1px solid #e50914; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Movie Info & Premium Details */
         .title { font-size: 1.5rem; font-weight: 700; color: #e50914; margin: 15px 0 5px; text-transform: uppercase; }
         .mLang { font-size: 0.85rem; color: #aaa; margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
         .lang-icon { background: #333; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; color: #eee; }
         
-        /* Premium Info Section */
         .premium-details { background: #111; padding: 15px; border-radius: 8px; border: 1px solid #222; margin-bottom: 25px; }
         .pd-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
         .pd-title { font-size: 0.9rem; font-weight: bold; color: #eee; text-transform: uppercase; letter-spacing: 1px; }
@@ -36,27 +34,33 @@
         .btn-box { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .btn { display: block; width: 100%; padding: 12px; background: #e50914; color: #fff; text-align: center; text-decoration: none; font-weight: bold; border-radius: 5px; transition: 0.3s; box-shadow: 0 2px 5px rgba(229,9,20,0.3); }
         .btn:hover { background: #b0070f; }
+        
+        /* Disclaimer Section */
+        .disclaimer-section { margin-top: 30px; padding: 15px; background: #111; border-radius: 8px; border: 1px solid #222; font-size: 0.7rem; color: #555; }
+        .disclaimer-title { font-weight: bold; color: #888; margin-bottom: 8px; font-size: 0.75rem; text-transform: uppercase; }
     </style>
 </head>
 <body>
-<div class="header"><a href="index.html" class="back-btn">←</a> <b>MovieSatBD Official - Premium</b></div>
+<div class="header"><a href="index.html" class="back-btn">←</a> <b>MovieSatBD Official - Premium Watch</b></div>
 <div class="container">
     <div class="player" id="playerBox"><p style="text-align:center; padding-top:20%; color:#888;">লোডিং...</p></div>
     <h1 class="title" id="mTitle">Movie Title</h1>
     <div class="mLang"><span>ভাষা:</span><span class="lang-icon" id="mLangTag">Bangla</span></div>
     
     <div class="premium-details">
-        <div class="pd-header">
-            <div class="pd-title">Premium Movie Details</div>
-            <div class="premium-icon">🏆</div>
-        </div>
+        <div class="pd-header"><div class="pd-title">Premium Movie Details</div><div class="premium-icon">🏆</div></div>
         <div class="pd-item"><span class="pd-label">IMDb Rating:</span><span id="mRating"><span class="rating-star">★</span><span class="rating-star">★</span><span class="rating-star">★</span><span class="rating-star">★</span><span class="rating-star">☆</span> 8.2/10</span></div>
         <div class="pd-item"><span class="pd-label">Release Date:</span><span id="mRelease">Oct 12, 2025</span></div>
         <div class="pd-item"><span class="pd-label">Genre:</span><span id="mGenre">Action, Thriller</span></div>
-        <div class="pd-item"><span class="pd-label">Description:</span><span id="mDesc">This is a highly rated premium movie available exclusively on MovieSatBD. High quality download links are provided below. Watch and enjoy.</span></div>
+        <div class="pd-item"><span class="pd-label">Description:</span><span id="mDesc">This high-quality premium movie is exclusively available on MovieSatBD. If download links are active below, you can enjoy it in ULTRA HD.</span></div>
     </div>
     
-    <div class="btn-box"><a href="#" class="btn" id="dlBtn" target="_blank">Download Movie (ULTRA HD)</a></div>
+    <div class="btn-box" id="downloadSection"><a href="#" class="btn" id="dlBtn" target="_blank">Download Movie (ULTRA HD)</a></div>
+    
+    <div class="disclaimer-section">
+        <p class="disclaimer-title">Legal & DMCA Disclaimer</p>
+        <p>MovieSatBD strictly serves as a platform utilizing public metadata. We do not host, control, or maintain any files that directly contain copyrighted content. If there are valid copyright concerns regarding linked content, please pursue recourse with the content holder via formal procedures. By accessing this platform, you acknowledge full responsibility for compliance with your local jurisdictional regulations concerning content access and reproduction.</p>
+    </div>
 </div>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,18 +74,26 @@
             
             document.getElementById('mTitle').innerText = data.title;
             document.getElementById('mLangTag').innerText = data.language || "Bangla";
-            document.getElementById('dlBtn').href = data.download_url || "#";
             
-            // Handle Video/Trailer
+            // Manage download button and status
+            const hasDownload = data.download_url && data.download_url !== "#";
+            if(hasDownload) {
+                document.getElementById('dlBtn').href = data.download_url;
+                document.getElementById('downloadSection').style.display = 'grid';
+            } else {
+                document.getElementById('downloadSection').style.display = 'none'; // Hide if coming soon
+            }
+            
+            // Handle Video/Coming Soon Banner
             const vUrl = data.video_url || data.trailer || "";
             const vIdMatch = vUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
             if(vIdMatch) {
                 document.getElementById('playerBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${vIdMatch[1]}?autoplay=1" allowfullscreen></iframe>`;
             } else {
-                // If NO Trailer: Show movie poster as a banner with tag
+                // If NO Trailer/Coming Soon: Show movie poster with English 'COMING SOON' status tag
                 document.getElementById('playerBox').innerHTML = `
                     <img src="${data.poster}" class="no-trailer-poster">
-                    <div class="no-trailer-tag">NO TRAILER | POSTER VIEW</div>`;
+                    <div class="coming-soon-status-tag">COMING SOON | MOVIE SAT BD</div>`;
             }
         } catch (e) { console.error(e); document.getElementById('playerBox').innerHTML = "<p style='text-align:center;color:red;padding-top:20%'>সার্ভার এরর</p>"; }
     }
