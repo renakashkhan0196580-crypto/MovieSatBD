@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieSatBD - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #000; color: #fff; font-family: 'Roboto', 'Hind Siliguri', sans-serif; }
+        header { padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; background: #111; position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 1px solid #222; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: #e50914; }
+        .search-box input { padding: 6px 15px; border-radius: 20px; border: 1px solid #444; background: #000; color: #fff; outline: none; width: 150px; }
+        .swiper { width: 100%; height: 250px; margin-top: 55px; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 10px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .movie-card { background: #111; border-radius: 6px; overflow: hidden; position: relative; border: 1px solid #222; cursor: pointer; }
+        .poster-box { height: 150px; }
+        .poster-box img { width: 100%; height: 100%; object-fit: cover; }
+        .lang-tag { position: absolute; top: 5px; right: 5px; background: #e50914; font-size: 8px; padding: 2px 5px; border-radius: 3px; font-weight: bold; }
+        .info { padding: 5px; text-align: center; font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    </style>
+</head>
+<body>
+<header><div class="logo">MovieSatBD</div><div class="search-box"><input type="text" id="searchInput" placeholder="খুঁজুন..." oninput="searchMovie()"></div></header>
+<div class="swiper mySwiper"><div class="swiper-wrapper" id="sliderWrapper"></div></div>
+<div class="container"><div class="movie-grid" id="movieGrid"><p id="loading" style="grid-column: 1/-1; text-align:center;">লোড হচ্ছে...</p></div></div>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    const DB_URL = "https://moviesatbd-default-rtdb.firebaseio.com/movies.json";
+    let allMovies = [];
+    async function fetchData() {
+        try {
+            const res = await fetch(DB_URL);
+            const data = await res.json();
+            if(!data) return;
+            allMovies = Object.keys(data).map(key => ({ fbId: key, ...data[key] })).reverse();
+            renderSlider();
+            renderMovies(allMovies);
+        } catch (e) { console.error(e); }
+    }
+    function renderSlider() {
+        const slider = document.getElementById('sliderWrapper');
+        allMovies.slice(0, 5).forEach(m => {
+            slider.innerHTML += `<div class="swiper-slide" onclick="window.location.href='movie.html?id=${m.fbId}'"><img src="${m.poster}"></div>`;
+        });
+        new Swiper(".mySwiper", { loop: true, autoplay: { delay: 3000 } });
+    }
+    function renderMovies(movies) {
+        const grid = document.getElementById('movieGrid');
+        if(document.getElementById('loading')) document.getElementById('loading').style.display = 'none';
+        grid.innerHTML = "";
+        movies.forEach(m => {
+            grid.innerHTML += `
+                <div class="movie-card" onclick="window.location.href='movie.html?id=${m.fbId}'">
+                    <span class="lang-tag">${m.language || 'Hindi'}</span>
+                    <div class="poster-box"><img src="${m.poster}"></div>
+                    <div class="info">${m.title}</div>
+                </div>`;
+        });
+    }
+    function searchMovie() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allMovies.filter(m => m.title.toLowerCase().includes(term));
+        renderMovies(filtered);
+    }
+    fetchData();
+</script>
+</body>
+</html>
+
