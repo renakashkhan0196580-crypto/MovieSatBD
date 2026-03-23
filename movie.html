@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player - MovieSatBD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0c0c0c; color: #fff; font-family: 'Roboto', sans-serif; }
+        .header { padding: 15px; background: #000; display: flex; align-items: center; border-bottom: 1px solid #222; }
+        .back-btn { color: #e50914; font-size: 1.5rem; text-decoration: none; margin-right: 15px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 10px; }
+        .player { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .title { font-size: 1.4rem; color: #e50914; margin: 15px 0 5px; }
+        .btn { display: block; width: 100%; padding: 12px; background: #e50914; color: #fff; text-align: center; text-decoration: none; font-weight: bold; border-radius: 5px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+<div class="header"><a href="index.html" class="back-btn">←</a> <b>Playing Movie</b></div>
+<div class="container">
+    <div class="player" id="playerBox"><p style="text-align:center; padding-top:20%;">লোডিং...</p></div>
+    <h1 class="title" id="mTitle">Movie Title</h1>
+    <p id="mLang" style="color:#aaa;">ভাষা: --</p>
+    <a href="#" class="btn" id="dlBtn" target="_blank">Download Movie</a>
+</div>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get('id');
+    async function loadMovie() {
+        if(!movieId) { window.location.href="index.html"; return; }
+        try {
+            const res = await fetch(`https://moviesatbd-default-rtdb.firebaseio.com/movies/${movieId}.json`);
+            const data = await res.json();
+            if(!data) return;
+            document.getElementById('mTitle').innerText = data.title;
+            document.getElementById('mLang').innerText = "ভাষা: " + (data.language || "Hindi");
+            document.getElementById('dlBtn').href = data.download_url || "#";
+            
+            // ইউটিউব আইডি বের করা
+            const vUrl = data.video_url || data.trailer || "";
+            const vId = vUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+            if(vId) {
+                document.getElementById('playerBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${vId[1]}?autoplay=1" allowfullscreen></iframe>`;
+            } else {
+                document.getElementById('playerBox').innerHTML = `<p style="text-align:center; padding-top:20%;">ট্রেইলার পাওয়া যায়নি</p>`;
+            }
+        } catch (e) { console.error(e); }
+    }
+    loadMovie();
+</script>
+</body>
+</html>
+
